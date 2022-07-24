@@ -4,31 +4,31 @@
 
 ## Activity属性
 
-1. `AbstractActivity`抽象的Activity,抽象声明必要的函数
+1. [AbstractActivity](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/base/AbstractActivity.kt)抽象的Activity,抽象声明必要的函数
     1. 公共`变量` AND `常量`
         1. 无.
     2. `函数`
         1. `initBinding()`该函数会对`dataBinding`进行初始化操作,在onCreate()之后,[initView]之前调用.
         2. `initView()`该函数在布局设置完成之后调用,只进行UI相关的操作,建议不要进行**数据**相关的操作.
         3. `obtainData()`该函数在 [initView] 函数之后调用,只进行数据相关的操作,建议不要进行 **视图初始化** 的相关的操作.
-2. `BaseActivity`基础的Activity设置
+2. [BaseActivity](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/base/BaseActivity.kt)基础的Activity设置
     1. 公共`变量` AND `常量`
         1. `iActivitySetting`获取默认的Activity全局设置.
         2. `isResume`当前Activity是否可见.
         3. `isDestroy`当前Activity是否销毁.
     2. `函数`
         1. 重写`setBar()`初始化状态栏,
-           设置状态栏颜色或者透明.返回值为[BarModel](https://github.com/Chen-Xi-g/GFAndroid/blob/main/base_core/src/src/main/java/com/alvin/base_core/model/BarModel)
+           设置状态栏颜色或者透明.返回值为[BarModel](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/model/BarModel.kt)
            .
         2. 调用`softInputHideOrShow()`显示隐藏软键盘.
-3. `BaseDialogActivity`在Activity上显示Dialog
+3. [BaseDialogActivity](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/base/BaseDialogActivity.kt)在Activity上显示Dialog
     1. 公共`变量` AND `常量`
         1. 无.
     2. `函数`
         1. `dialog<T>()`通过泛型获取Dialog.
         2. `loading()`显示Dialog.
         3. `dismiss()`隐藏Dialog.
-4. `BaseLayoutActivity`布局进初始化
+4. [BaseLayoutActivity](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/base/BaseLayoutActivity.kt)布局进初始化
     1. 公共`变量` AND `常量`
         1. `baseRootLayout`缺省页根布局.
     2. `函数`
@@ -55,26 +55,19 @@
             3. `showEmptyLayout()`显示空数据布局.
         6. 其他
             1. `setToast()`重写该方法可以自行设置Toast.
-5. `BaseNetworkActivity`网络回调
+5. [BaseNetworkActivity](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/base/BaseNetworkActivity.kt)网络回调
     1. 公共`变量` AND `常量`
         1. 无.
     2. `函数`
         1. `beforeNetwork()`网络请求开始.
         2. `afterNetwork()`网络请求结束.
         3. `failed()`网络请求错误.
-6. `BaseNetworkActivity`网络回调
-    1. 公共`变量` AND `常量`
-        1. 无
-    2. `函数`
-        1. `beforeNetwork()`网络请求开始
-        2. `afterNetwork()`网络请求结束
-        3. `failed()`网络请求失败
-7. `BaseVMActivity`实现ViewModel的Activity基类
+6. [BaseVMActivity](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/base/BaseVMActivity.kt)实现ViewModel的Activity基类
     1. 公共`变量` AND `常量`
         1. `viewModel`获取通过泛型传递的ViewModel.
     2. `函数`
         1. `addLoadingObserve()` ViewModel通过非泛型绑定时，注册监听.
-8. `BaseMVVMActivity`所有Activity最终需要继承的MVVM类
+7. [BaseMVVMActivity](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/base/BaseMVVMActivity.kt)所有Activity最终需要继承的MVVM类
     1. 公共`变量` AND `常量`
         1. `binding`内容布局的ViewDataBinding
     2. `函数`
