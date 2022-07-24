@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdk AndroidConfig.compileSdk
+
+    defaultConfig {
+        applicationId AndroidConfig.applicationId
+        minSdk AndroidConfig.minSdk
+        targetSdk AndroidConfig.targetSdk
+        versionCode AndroidConfig.versionCode
+        versionName AndroidConfig.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled AndroidConfig.minifyEnabled
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures{
+        dataBinding true
+    }
+}
+
+dependencies {
+
+    implementation Dependencies.kotlinStdLib
+    implementation Dependencies.core
+    implementation Dependencies.appcompat
+    implementation Dependencies.material
+    implementation Dependencies.constraintLayout
+
+    implementation project(":base_core")
+}

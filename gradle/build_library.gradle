@@ -1,0 +1,74 @@
+apply plugin:'com.android.library'
+apply plugin:'kotlin-android'
+apply plugin:'kotlin-kapt'
+apply plugin:'maven-publish'
+
+group = JetpackMaven.mavenGroup
+version = JetpackMaven.mavenVersion
+
+android {
+    compileSdk AndroidConfig.compileSdk
+
+    defaultConfig {
+        minSdk AndroidConfig.minSdk
+        targetSdk AndroidConfig.targetSdk
+        // 当将minSdkVersion设置为20或更低时需要
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures{
+        dataBinding true
+    }
+
+    sourceSets {
+        main {
+            // res 资源目录配置
+            res.srcDirs(
+                    'src/main/res',
+                    'src/main/res-sw',
+            )
+        }
+    }
+}
+
+dependencies {
+
+    implementation Dependencies.kotlinStdLib
+    implementation Dependencies.core
+    implementation Dependencies.appcompat
+    implementation Dependencies.material
+    implementation Dependencies.constraintLayout
+
+}
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                artifact androidSourcesJar
+                groupId = JetpackMaven.mavenGroup
+                artifactId = project.name
+                version = JetpackMaven.mavenVersion
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+apply from:("../gradle/build_library.gradle")
+dependencies {
+    // lifecycle
+    api Dependencies.lifecycleRuntime
+    api Dependencies.lifecycleCommon
+    api Dependencies.lifecycleExtensions
+    // ViewModel
+    api Dependencies.viewModel
+    // LiveData
+    api Dependencies.liveData
+    // 引入状态栏设置
+    api Dependencies.immersionBar
+    api Dependencies.immersionBarKt
+}
