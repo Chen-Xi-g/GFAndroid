@@ -13,8 +13,14 @@ abstract class BaseDialogActivity : BaseActivity() {
      * 获取Dialog
      */
     private val dialog by lazy(LazyThreadSafetyMode.NONE) {
-        iActivitySetting.dialogSetting().dialog(this)
+        setDialog().dialog(this)
     }
+
+    /**
+     * 自定义局部Dialog
+     * @return IDialogSetting
+     */
+    open fun setDialog() = iActivitySetting.dialogSetting()
 
     /**
      * 获取当前Dialog, 需要指定Dialog类型
@@ -30,7 +36,7 @@ abstract class BaseDialogActivity : BaseActivity() {
      */
     open fun loading(content: String) {
         dialog?.let {
-            iActivitySetting.dialogSetting().show(it, content)
+            setDialog().show(it, content)
         }
     }
 
@@ -39,7 +45,7 @@ abstract class BaseDialogActivity : BaseActivity() {
      */
     open fun dismiss() {
         dialog?.let {
-            iActivitySetting.dialogSetting().dismiss(it)
+            setDialog().dismiss(it)
         }
     }
 

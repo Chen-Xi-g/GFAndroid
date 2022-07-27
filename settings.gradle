@@ -1,3 +1,4 @@
 rootProject.name = "GFAndroid"
 include ':app'
 include ':base_core'
+include ':GFAD'

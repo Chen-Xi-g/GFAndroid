@@ -93,7 +93,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
         )
         // 设置标题栏内边距
         immersionBar {
-            titleBar(baseRootLayout.baseTitleLayout)
+            titleBar(titleLayout?.root)
             init()
         }
         // 全局标题事件点击监听
@@ -143,7 +143,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
             true
         )
         // 错误布局点击监听
-        errorLayout?.root?.findViewById<TextView>(iActivitySetting.errorRetryId())?.let {
+        errorLayout?.root?.findViewById<TextView>(setErrorRetryId())?.let {
             it.setOnClickListener {
                 onErrorLayoutRetryClick()
             }
@@ -178,6 +178,17 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
     open fun onErrorLayoutRetryClick() {
         // 默认空实现
     }
+
+    /**
+     * @return Int 点击重试的ID
+     */
+    open fun setErrorRetryId() = iActivitySetting.errorRetryId()
+
+    /**
+     * 设置错误内容显示ID
+     * @return Int
+     */
+    open fun setErrorMessageId() = iActivitySetting.errorMessageId()
 
     /**
      * 设置标题布局
@@ -282,7 +293,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
      * 缺省页切换为错误布局
      */
     fun showErrorLayout(errorMsg: String = "") {
-        baseRootLayout.baseErrorLayout.findViewById<TextView>(iActivitySetting.errorMessageId()).text =
+        baseRootLayout.baseErrorLayout.findViewById<TextView>(setErrorMessageId())?.text =
             errorMsg
         if (baseRootLayout.baseErrorLayout.visibility == View.VISIBLE) return
         baseRootLayout.baseErrorLayout.visibility = View.VISIBLE
