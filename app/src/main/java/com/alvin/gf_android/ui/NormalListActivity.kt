@@ -51,7 +51,7 @@ class NormalListActivity :
                                 "我是新添加新的Item内容${randomInt}",
                                 "http://cdn.u2.huluxia.com/g3/M02/36/6C/wKgBOVwPoAmASl2jAADug4ZLXoo747.jpg"
                             )
-                            binding.list.addData(listOf(entity), 1)
+                            binding.list.addData(entity, 1)
                         }
                         2 -> {
                             val item = binding.list.data[1]

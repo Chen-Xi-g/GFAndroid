@@ -40,6 +40,17 @@ fun RecyclerView.addData(data: List<*>, index: Int = -1) {
 }
 
 /**
+ * 添加数据
+ *
+ * @receiver RecyclerView
+ * @param item 数据源
+ * @param index Int 从指定索引添加
+ */
+fun RecyclerView.addData(item: Any, index: Int = -1) {
+    reuseAdapter.addData(data, index)
+}
+
+/**
  * 删除指定索引数据
  *
  * @receiver RecyclerView
