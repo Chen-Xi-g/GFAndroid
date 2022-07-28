@@ -47,7 +47,7 @@ fun RecyclerView.addData(data: List<*>, index: Int = -1) {
  * @param index Int 从指定索引添加
  */
 fun RecyclerView.addData(item: Any, index: Int = -1) {
-    reuseAdapter.addData(data, index)
+    reuseAdapter.addData(item, index)
 }
 
 /**

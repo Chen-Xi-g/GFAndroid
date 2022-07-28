@@ -9,7 +9,9 @@ import com.alvin.gf_android.base.BaseGFActivity
 import com.alvin.gf_android.databinding.ActivityNormalListBinding
 import com.alvin.gf_android.databinding.ItemNormalBinding
 import com.alvin.gf_android.model.NormalEntity
+import com.alvin.gf_android.utils.toast
 import com.alvin.gf_android.vm.NormalViewModel
+import com.alvin.gfad.mode.SelectSealed
 import com.alvin.gfad.utils.*
 import com.bumptech.glide.Glide
 import java.util.*
@@ -36,7 +38,17 @@ class NormalListActivity :
         setMenuText("列表事件") {
             AlertDialog.Builder(this)
                 .setTitle("列表事件")
-                .setItems(arrayOf("删除Item", "添加Item", "更新Item")) { dialog, which ->
+                .setItems(
+                    arrayOf(
+                        "删除Item",
+                        "添加Item",
+                        "更新Item",
+                        "单选",
+                        "多选",
+                        "全选",
+                        "取消全选"
+                    )
+                ) { dialog, which ->
                     when (which) {
                         0 -> {
                             binding.list.removeAt(1)
@@ -63,6 +75,20 @@ class NormalListActivity :
                             }
                             binding.list.setData(1, item!!)
                         }
+                        3 -> {
+                            binding.list.reuseAdapter.selectModel = SelectSealed.Single
+                            binding.list.reuseAdapter.checkedAll(false)
+                        }
+                        4 -> {
+                            binding.list.reuseAdapter.selectModel = SelectSealed.Multiple
+                            binding.list.reuseAdapter.checkedAll(false)
+                        }
+                        5 -> {
+                            binding.list.reuseAdapter.checkedAll()
+                        }
+                        6 -> {
+                            binding.list.reuseAdapter.checkedAll(false)
+                        }
                     }
                 }.create().show()
         }
@@ -84,7 +110,9 @@ class NormalListActivity :
      */
     private fun initAdapter() {
         binding.list.linear().setup {
+            selectModel = SelectSealed.Single
             addType<NormalEntity>(R.layout.item_normal)
+            // onBindViewHolder 回调
             onBind {
                 val itemBinding = getBinding<ItemNormalBinding>()
                 itemBinding?.item = getItem()
@@ -95,6 +123,38 @@ class NormalListActivity :
                         .into(it)
                 }
                 itemBinding?.executePendingBindings()
+            }
+            // Item点击事件
+            onItemClick {
+                // 删除点击的Item
+                removeAt(adapterPosition)
+            }
+            // Item长按事件
+            onItemLongClick {
+                "长按了第${adapterPosition}个Item".toast()
+            }
+            // 子Item点击事件
+            addOnItemChildClickListener(R.id.itemIvCover, R.id.itemTvContent) { viewId ->
+                when (viewId) {
+                    R.id.itemIvCover -> {
+                        "点击了第${adapterPosition}个Item的图片".toast()
+                    }
+                    R.id.itemTvContent -> {
+                        // 选择该条目
+                        checkedSwitch(adapterPosition)
+                    }
+                }
+            }
+            // 子Item长按事件
+            addOnItemChildLongClickListener(R.id.itemIvCover, R.id.itemTvContent) { viewId ->
+                when (viewId) {
+                    R.id.itemIvCover -> {
+                        checkedSwitch(adapterPosition)
+                    }
+                    R.id.itemTvContent -> {
+                        "长按了第${adapterPosition}个Item的文字".toast()
+                    }
+                }
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.alvin.gf_android.model
 
+import com.alvin.gfad.mode.ICheckedEntity
+
 /**
  * <h3> 作用类描述：普通列表数据</h3>
  *
@@ -16,5 +18,5 @@ data class NormalEntity(
     val id: Int,
     var title: String,
     var content: String,
-    var imageUrl: String
-)
+    var imageUrl: String, override var isSelected: Boolean = false
+) : ICheckedEntity

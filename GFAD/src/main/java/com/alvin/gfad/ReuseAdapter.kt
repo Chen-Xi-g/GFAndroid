@@ -10,6 +10,8 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.alvin.gfad.mode.ICheckedEntity
+import com.alvin.gfad.mode.SelectSealed
 import java.util.concurrent.atomic.AtomicLong
 
 /**
@@ -35,8 +37,22 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     private var _onBind: (BaseViewHolder.() -> Unit)? = null
 
     // 点击事件回调
-    private var _onItemClick: (BaseViewHolder.(adapter: ReuseAdapter, view: View, position: Int) -> Unit)? =
+    private var _onItemClick: (BaseViewHolder.(view: View) -> Unit)? =
         null
+
+    // 长按事件回调
+    private var _onItemLongClick: (BaseViewHolder.(view: View) -> Unit)? =
+        null
+
+    // 单选多选回调
+    private var onChecked: ((position: Int, checked: Boolean, allChecked: Boolean) -> Unit)? =
+        null
+
+    // 子Item点击事件回调集合, key为子Item的id, value为回调
+    private val clickListeners = mutableMapOf<Int, (BaseViewHolder.(viewId: Int) -> Unit)>()
+
+    // 子Item长按事件回调集合, key为子Item的id, value为回调
+    private val longClickListeners = mutableMapOf<Int, (BaseViewHolder.(viewId: Int) -> Unit)>()
 
     /**
      * 添加指定类型布局,适配多布局.
@@ -45,6 +61,33 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
      *  Any.(Int) -> Int
      */
     var typeLayouts = mutableMapOf<Class<*>, Any.(Int) -> Int>()
+
+    /**
+     * 是否需要为点击事件设置防抖,默认为true.
+     */
+    var isShake = true
+
+    /**
+     * 已选择条目的Position
+     */
+    val checkedPosition = mutableListOf<Int>()
+
+    /**
+     * 当前选择模式
+     * 默认选择模式为 [SelectSealed.None] 什么都不做.
+     * 可以项:
+     * [SelectSealed.Single] 单选
+     * [SelectSealed.Single] 多选
+     */
+    var selectModel: SelectSealed = SelectSealed.None
+
+    /** 已选择条目数量 */
+    val checkedCount: Int get() = checkedPosition.size
+
+    /**
+     * 是否全选
+     */
+    fun isCheckedAll(): Boolean = checkedCount == _list.size
 
     override fun getItemViewType(position: Int): Int {
         val item = getData<Any>(position)
@@ -84,8 +127,117 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     /**
      * 为Recyclerview添加ItemView的点击事件回调
      */
-    fun onItemClick(onItemClick: (BaseViewHolder.(adapter: ReuseAdapter, view: View, position: Int) -> Unit)) {
+    fun onItemClick(onItemClick: (BaseViewHolder.(view: View) -> Unit)) {
         _onItemClick = onItemClick
+    }
+
+    /**
+     * 为Recyclerview添加ItemView的长按事件回调
+     */
+    fun onItemLongClick(onItemLongClick: (BaseViewHolder.(view: View) -> Unit)) {
+        _onItemLongClick = onItemLongClick
+    }
+
+    /**
+     * 为Recyclerview添加ItemView的子View的点击事件回调
+     */
+    fun addOnItemChildClickListener(
+        @IdRes vararg id: Int,
+        onItemChildClick: (BaseViewHolder.(viewId: Int) -> Unit)
+    ) {
+        id.forEach {
+            clickListeners[it] = onItemChildClick
+        }
+    }
+
+    /**
+     * 为Recyclerview添加ItemView的子View的长按事件回调
+     */
+    fun addOnItemChildLongClickListener(
+        @IdRes vararg id: Int,
+        onItemChildLongClick: (BaseViewHolder.(viewId: Int) -> Unit)
+    ) {
+        id.forEach {
+            longClickListeners[it] = onItemChildLongClick
+        }
+    }
+
+    /**
+     * 单选模式下不可全选, 但可以取消单选
+     * @param checked true为全选, false 取消全部选择
+     */
+    fun checkedAll(checked: Boolean = true) {
+        if (isCheck()) return
+        if (checked) {
+            // 全选
+            if (selectModel is SelectSealed.Single) return
+            _list.forEachIndexed { index, t ->
+                if (!checkedPosition.contains(index)) {
+                    setChecked(index, true)
+                }
+            }
+        } else {
+            // 取消全选
+            _list.forEachIndexed { index, t ->
+                if (checkedPosition.contains(index)) setChecked(index, false)
+            }
+        }
+    }
+
+    /**
+     * 设置选中
+     *
+     * @param position 当前索引
+     * @param checked true: 选中,  false: 取消选中
+     */
+    fun setChecked(position: Int, checked: Boolean) {
+        // 避免冗余操作
+        if ((checkedPosition.contains(position) && checked) ||
+            (!checked && !checkedPosition.contains(position)) || isCheck()
+        ) return
+
+        // 实体类没有实现 ICheckedEntity 接口,直接return
+        val item = getData<Any>(position)
+        if (item !is ICheckedEntity) return
+
+        if (checked) checkedPosition.add(position)
+        else checkedPosition.remove(position)
+
+        if (selectModel is SelectSealed.Single && checked && checkedPosition.size > 1) {
+            // 当前模式为单选, 使用递归取消选择
+            setChecked(checkedPosition[0], false)
+        }
+        // 修改选择状态
+        item.isSelected = checked
+        // 选择回调
+        onChecked?.invoke(position, checked, isCheckedAll())
+        notifyItemChanged(position)
+    }
+
+    /**
+     * 切换选中
+     */
+    fun checkedSwitch(position: Int) {
+        if (isCheck()) return
+        if (checkedPosition.contains(position)) {
+            setChecked(position, false)
+        } else {
+            setChecked(position, true)
+        }
+    }
+
+    /**
+     * 判断是否需要选中
+     *
+     * @return true: 需要选中, false: 不需要选中
+     */
+    private fun isCheck() = onChecked != null && selectModel !is SelectSealed.None
+
+    /**
+     * 选择回调
+     */
+    fun onChecked(block: (position: Int, checked: Boolean, allChecked: Boolean) -> Unit) {
+        onChecked = block
     }
 
     /**
@@ -225,9 +377,46 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
         internal fun onBind(item: Any) {
             _item = item
             _onBind?.invoke(this)
-            itemView.setOnClickListener(ShakeClickListener {
-                _onItemClick?.invoke(this@BaseViewHolder, this@ReuseAdapter, this, adapterPosition)
-            })
+            // 点击事件
+            _onItemClick?.let { itemClick ->
+                if (isShake) {
+                    itemView.setOnClickListener(ShakeClickListener {
+                        itemClick.invoke(this@BaseViewHolder, this)
+                    })
+                } else {
+                    itemView.setOnClickListener {
+                        itemClick.invoke(this@BaseViewHolder, it)
+                    }
+                }
+            }
+            // 长按事件
+            _onItemLongClick?.let { longClick ->
+                itemView.setOnLongClickListener {
+                    longClick.invoke(this@BaseViewHolder, it)
+                    true
+                }
+            }
+            // 子Item点击事件
+            for (clickListener in clickListeners) {
+                val view = itemView.findViewById<View>(clickListener.key) ?: continue
+                if (isShake) {
+                    view.setOnClickListener(ShakeClickListener {
+                        clickListener.value.invoke(this@BaseViewHolder, clickListener.key)
+                    })
+                } else {
+                    view.setOnClickListener {
+                        clickListener.value.invoke(this@BaseViewHolder, clickListener.key)
+                    }
+                }
+            }
+            // 子Item长按事件
+            for (longClickListener in longClickListeners) {
+                val view = itemView.findViewById<View>(longClickListener.key) ?: continue
+                view.setOnLongClickListener {
+                    longClickListener.value.invoke(this@BaseViewHolder, longClickListener.key)
+                    true
+                }
+            }
         }
 
         /**
