@@ -10,6 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import java.util.concurrent.atomic.AtomicLong
 
 /**
  * <h3> 作用类描述：RecyclerView 可重复利用的适配器</h3>
@@ -30,10 +31,15 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     /**
      * 回调
      */
+    // onBindViewHolder回调
     private var _onBind: (BaseViewHolder.() -> Unit)? = null
 
+    // 点击事件回调
+    private var _onItemClick: (BaseViewHolder.(adapter: ReuseAdapter, view: View, position: Int) -> Unit)? =
+        null
+
     /**
-     * 添加指定模型布局
+     * 添加指定类型布局,适配多布局.
      *
      * 实体类.(索引) -> 布局ID
      *  Any.(Int) -> Int
@@ -73,6 +79,13 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
      */
     fun onBind(onBind: (BaseViewHolder.() -> Unit)) {
         _onBind = onBind
+    }
+
+    /**
+     * 为Recyclerview添加ItemView的点击事件回调
+     */
+    fun onItemClick(onItemClick: (BaseViewHolder.(adapter: ReuseAdapter, view: View, position: Int) -> Unit)) {
+        _onItemClick = onItemClick
     }
 
     /**
@@ -135,7 +148,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     }
 
     /**
-     * 添加模型数据
+     * 添加数据
      * @param data List<Any?>?
      * @param index Int 从指定索引添加数据
      */
@@ -153,7 +166,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     }
 
     /**
-     * 添加模型数据
+     * 添加数据
      * @param item Any 数据源
      * @param index Int 从指定索引添加数据, 值为-1时在指定索引添加, 默认在最后添加.
      */
@@ -189,7 +202,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
      *
      * @param size 新数据数量
      */
-    fun isRefresh(size: Int) {
+    private fun isRefresh(size: Int) {
         if (_list.size == size) {
             notifyDataSetChanged()
         }
@@ -212,6 +225,9 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
         internal fun onBind(item: Any) {
             _item = item
             _onBind?.invoke(this)
+            itemView.setOnClickListener(ShakeClickListener {
+                _onItemClick?.invoke(this@BaseViewHolder, this@ReuseAdapter, this, adapterPosition)
+            })
         }
 
         /**
@@ -226,11 +242,38 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
         inline fun <reified T> getItem() = _item as T
 
         /**
+         * 获取当前类型数据, 如果找不到则返回null
+         */
+        inline fun <reified T> getItemOrNull() = _item as? T
+
+        /**
          * 通过ID查找View
          * @param id Int ID
          * @return (V..V?)
          */
         fun <V : View> findView(@IdRes id: Int) = itemView.findViewById<V>(id)
+    }
+
+    /**
+     * 点击事件防抖
+     *
+     * @property internal
+     * @property block
+     */
+    private class ShakeClickListener(
+        private val internal: Int = 500,
+        private val block: View.() -> Unit
+    ) : View.OnClickListener {
+
+        private val lastClickTime = AtomicLong(0)
+
+        override fun onClick(v: View) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime.get() > internal) {
+                lastClickTime.set(currentTime)
+                block.invoke(v)
+            }
+        }
     }
 
 }
