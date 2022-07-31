@@ -9,8 +9,10 @@ import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alvin.gfad.mode.ICheckedEntity
+import com.alvin.gfad.mode.ItemExpand
 import com.alvin.gfad.mode.SelectSealed
 import java.util.concurrent.atomic.AtomicLong
 
@@ -23,6 +25,8 @@ import java.util.concurrent.atomic.AtomicLong
  */
 @SuppressLint("NotifyDataSetChanged")
 open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
+
+    var rv: RecyclerView? = null
 
     /**
      * 模型数据数据
@@ -45,7 +49,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
         null
 
     // 单选多选回调
-    private var onChecked: ((position: Int, checked: Boolean, allChecked: Boolean) -> Unit)? =
+    private var onChecked: ((position: Int, checked: Boolean, isAll: Boolean) -> Unit)? =
         null
 
     // 子Item点击事件回调集合, key为子Item的id, value为回调
@@ -113,6 +117,11 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
 
     override fun getItemCount(): Int {
         return _list.size
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        rv = recyclerView
     }
 
     /**
@@ -236,7 +245,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     /**
      * 选择回调
      */
-    fun onChecked(block: (position: Int, checked: Boolean, allChecked: Boolean) -> Unit) {
+    fun onChecked(block: (position: Int, checked: Boolean, isAll: Boolean) -> Unit) {
         onChecked = block
     }
 
@@ -270,17 +279,10 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
      *
      * @param list List<*> 数据源
      */
-    fun setData(list: List<*>?) {
-        if (list !== _list) {
-            _list.clear()
-            if (!list.isNullOrEmpty()) {
-                _list.addAll(list)
-            }
-        } else {
-            _list.clear()
-            if (!list.isNullOrEmpty()) {
-                _list.addAll(list)
-            }
+    fun setData(list: List<Any?>?) {
+        _list.clear()
+        if (!list.isNullOrEmpty()) {
+            _list.addAll(list)
         }
         notifyDataSetChanged()
     }
@@ -441,6 +443,73 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
          * @return (V..V?)
          */
         fun <V : View> findView(@IdRes id: Int) = itemView.findViewById<V>(id)
+
+        /**
+         * 展开数据
+         */
+        fun expand(scrollTop: Boolean = false) {
+            (_item as? ItemExpand)?.let {
+                // 当前已展开或者执行动画中,无需进行操作
+                val childList = it.itemChildList
+                if (it.itemExpand || adapterPosition == -1 || childList.isNullOrEmpty()) return
+                it.itemExpand = true
+                // 展开, 添加子数据到指定索引
+                _list.addAll(adapterPosition + 1, childList)
+                notifyItemChanged(adapterPosition)
+                notifyItemRangeInserted(adapterPosition + 1, childList.size)
+                notifyItemRangeChanged(adapterPosition + 1, _list.size)
+                if (scrollTop) {
+                    rv?.let { rv ->
+                        rv.scrollToPosition(adapterPosition)
+                        (rv.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(
+                            adapterPosition,
+                            0
+                        )
+                    }
+                }
+            }
+        }
+
+        /**
+         * 收起数据
+         */
+        fun collapse() {
+            (_item as? ItemExpand)?.let {
+                collapseAll(it)
+            }
+        }
+
+        /**
+         * 使用递归折叠全部数据
+         */
+        private fun collapseAll(item: ItemExpand) {
+            val childList = item.itemChildList
+            if (!item.itemExpand || adapterPosition == -1 || childList.isNullOrEmpty()) return
+            item.itemChildList?.forEach {
+                if (it is ItemExpand) {
+                    collapseAll(it)
+                }
+            }
+            item.itemExpand = false
+            // 收起, 删除子数据
+            _list.removeAll(childList)
+            notifyItemChanged(adapterPosition)
+            notifyItemRangeRemoved(adapterPosition + 1, childList.size)
+            notifyItemRangeChanged(adapterPosition + 1, _list.size)
+        }
+
+        /**
+         * 展开或收起当前Item
+         */
+        fun expandOrCollapse(scrollTop: Boolean = false) {
+            (_item as? ItemExpand)?.let {
+                if (it.itemExpand) {
+                    collapse()
+                } else {
+                    expand(scrollTop)
+                }
+            }
+        }
     }
 
     /**

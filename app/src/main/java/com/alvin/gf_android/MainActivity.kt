@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.alvin.gf_android.databinding.ActivityMainBinding
+import com.alvin.gf_android.ui.ExpandActivity
 import com.alvin.gf_android.ui.GlobalActivity
 import com.alvin.gf_android.ui.LocalActivity
 import com.alvin.gf_android.ui.NormalListActivity
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnGlobalActivity.setOnClickListener(onClickListener)
         binding.btnLocalActivity.setOnClickListener(onClickListener)
         binding.btnListActivity.setOnClickListener(onClickListener)
+        binding.btnExpandActivity.setOnClickListener(onClickListener)
     }
 
     private val onClickListener = View.OnClickListener {
@@ -32,6 +34,9 @@ class MainActivity : AppCompatActivity() {
             }
             binding.btnListActivity -> {
                 startActivity(NormalListActivity.newIntent(this))
+            }
+            binding.btnExpandActivity -> {
+                startActivity(ExpandActivity.newIntent(this))
             }
         }
     }
