@@ -36,12 +36,13 @@ class ExpandViewModel : BaseViewModel() {
                             )
                         )
                     }
-                    childChildList.add(
+                     childChildList.add(
                         ExpandEntity(
                             i,
                             "子子数据标题$i$j$k",
                             "子子数据内容$i$j$k",
-                            itemChildList = childChildChild
+                            itemChildList = childChildChild,
+                            isSticky = k == 0
                         )
                     )
                 }
@@ -54,7 +55,7 @@ class ExpandViewModel : BaseViewModel() {
                     )
                 )
             }
-            list.add(ExpandEntity(i, "展开收起的标题$i", "展开收起的内容$i", itemChildList = childList))
+            list.add(ExpandEntity(i, "展开收起的标题$i", "展开收起的内容$i", itemChildList = childList,isSticky = i == 0))
         }
         _listData.value = list.toList()
     }

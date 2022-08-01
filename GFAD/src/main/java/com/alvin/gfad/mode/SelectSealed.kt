@@ -1,7 +1,7 @@
 package com.alvin.gfad.mode
 
 /**
- * <h3> 作用类描述：</h3>
+ * <h3> 作用类描述：选择模式密封类</h3>
  *
  * @Package :        com.alvin.gfad.mode
  * @Date :           2022/7/24

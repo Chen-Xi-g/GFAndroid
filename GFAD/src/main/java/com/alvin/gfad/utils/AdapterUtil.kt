@@ -1,11 +1,11 @@
 package com.alvin.gfad.utils
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.alvin.gfad.ReuseAdapter
-import com.alvin.gfad.layout_manager.ReuseGridLayoutManager
-import com.alvin.gfad.layout_manager.ReuseLinearLayoutManager
-import com.alvin.gfad.layout_manager.ReuseStaggeredGridLayoutManager
+import com.alvin.gfad.layout_manager.*
+import com.alvin.gfad.type.ItemSticky
 
 /**
  * <h3> 作用类描述：适配器工具类，扩展函数使用</h3>
@@ -112,7 +112,7 @@ fun RecyclerView.linear(
     scrollEnabled: Boolean = true,
     stackFromEnd: Boolean = false
 ): RecyclerView {
-    layoutManager = ReuseLinearLayoutManager(context, orientation, reverseLayout).apply {
+    layoutManager = StickyLinearLayoutManager(context, orientation, reverseLayout).apply {
         setScrollEnabled(scrollEnabled)
         this.stackFromEnd = stackFromEnd
     }
@@ -137,7 +137,7 @@ fun RecyclerView.grid(
     reverseLayout: Boolean = false,
     scrollEnabled: Boolean = true
 ): RecyclerView {
-    layoutManager = ReuseGridLayoutManager(context, spanCount, orientation, reverseLayout).apply {
+    layoutManager = StickyGridLayoutManager(context, spanCount, orientation, reverseLayout).apply {
         setScrollEnabled(scrollEnabled)
     }
     // 避免刷新闪烁
@@ -161,7 +161,7 @@ fun RecyclerView.staggered(
     reverseLayout: Boolean = false,
     scrollEnabled: Boolean = true
 ): RecyclerView {
-    layoutManager = ReuseStaggeredGridLayoutManager(spanCount, orientation).apply {
+    layoutManager = StickyStaggeredGridLayoutManager(spanCount, orientation).apply {
         setScrollEnabled(scrollEnabled)
         this.reverseLayout = reverseLayout
     }

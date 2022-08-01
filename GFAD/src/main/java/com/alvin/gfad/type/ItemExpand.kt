@@ -1,9 +1,9 @@
-package com.alvin.gfad.mode
+package com.alvin.gfad.type
 
 /**
  * <h3> 作用类描述：</h3>
  *
- * @Package :        com.alvin.gfad.mode
+ * @Package :        com.alvin.gfad.type
  * @Date :           2022/7/29
  * @author 高国峰
  */

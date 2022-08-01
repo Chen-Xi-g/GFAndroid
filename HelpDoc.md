@@ -5,7 +5,7 @@
 
 ## Activity属性
 
-> 更加快速的使用DataBinding和ViewModel进行开发，以及一些常用的函数集成，提高开发效率。
+> 更加快速的使用DataBinding和ViewModel进行开发，以及一些常用的函数集成，提高开发效率.
 
 1. [AbstractActivity](https://github.com/Chen-Xi-g/GFAndroid/blob/master/base_core/src/main/java/com/alvin/base_core/base/AbstractActivity.kt)抽象的Activity,抽象声明必要的函数
     1. 公共`变量` AND `常量`
@@ -81,22 +81,36 @@
 
 ## GFAD属性
 
->对于适配器的工作，一般都是一些重复的工作，比如创建Adapter，选择布局，设置各种事件回调，还有状态处理。
+>对于适配器的工作，一般都是一些重复的工作，比如创建Adapter，选择布局，设置各种事件回调，还有状态处理.
 >
->为了处理上面的问题，所以对Adapter进行封装，并且使用Kotlin扩展函数加速开发，减少重复性工作。
+>为了处理上面的问题，所以对Adapter进行封装，并且使用Kotlin扩展函数加速开发，减少重复性工作.
 
 ### ReuseAdapter
 
 1. 公共变量
     1. `list`返回当前Adapter设置的数据集.
     2. `typeLayouts`已经设置的指定类型布局,适配多布局.
+    3. `shakeEnable`当前Adapter是否需要设置防抖
+    4. `checkedPosition`已选择条目的Position
+    5. `selectModel`设置当前选择模式
 2. 函数
     1. `onBind()`基于Lambda为`onBindViewHolder()`添加回调,用于对Item内容进行操作.
     2. `addType<T>()`添加指定类型布局, 这里的泛型类型需要和Model类型一致, 否则无法找到向右布局.
-    3. `getData<T>()`根据索引获取模型数据.
-    4. `setData()`设置数据.
-    5. `addData()`新增数据.
-    6. `removeAt()`删除数据.
+    3. `onItemClick()`为Recyclerview添加ItemView的点击事件回调.
+    4. `onItemLongClick()`为Recyclerview添加ItemView的长按事件回调.
+    5. `onChecked()`选择回调.
+    6. `onStickyAttachListener`吸顶监听.
+    7. `addOnItemChildClickListener()`为Recyclerview添加ItemView的子View的点击事件回调.
+    8. `addOnItemChildLongClickListener()`为Recyclerview添加ItemView的子View的长按事件回调.
+    9. `checkedAll()`全选或取消全选.
+    10. `setChecked()`设置指定索引选中状态.
+    11. `checkedSwitch()`切换指定索引选中状态.
+    12. `getData<T>()`根据索引获取模型数据.
+    13. `setData()`设置数据.
+    14. `addData()`新增数据.
+    15. `removeAt()`删除数据.
+    16. `isCheckedAll()`当前是否已经全选.
+    17. `isSticky()`判断指定索引是否为吸顶布局
 
 ### ReuseAdapter.BaseViewHolder
 
@@ -108,5 +122,6 @@
     3. `getItem<T>()`通过泛型获取指定数据类型.
     4. `getItemOrNull<T>()`获取当前类型数据, 如果找不到则返回null.
     5. `findView<V>()`通过ViewId返回指定泛型View.
-
-### 
+    6. `expand()`展开Item.
+    7. `collapse()`收起Item.
+    8. `expandOrCollapse()`展开或收起Item.

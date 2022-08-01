@@ -1,6 +1,7 @@
 package com.alvin.gf_android.model
 
-import com.alvin.gfad.mode.ItemExpand
+import com.alvin.gfad.type.ItemExpand
+import com.alvin.gfad.type.ItemSticky
 
 /**
  * <h3> 作用类描述：展开收起的ViewModel</h3>
@@ -15,5 +16,5 @@ data class ExpandEntity(
     val content: String,
     override var itemGroupPosition: Int = 0,
     override var itemExpand: Boolean = false,
-    override var itemChildList: List<Any?>?
-) : ItemExpand
+    override var itemChildList: List<Any?>?, override var isSticky: Boolean = false
+) : ItemExpand,ItemSticky

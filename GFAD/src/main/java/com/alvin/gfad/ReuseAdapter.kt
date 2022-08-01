@@ -11,9 +11,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alvin.gfad.listeners.ViewSetup
 import com.alvin.gfad.mode.ICheckedEntity
-import com.alvin.gfad.mode.ItemExpand
+import com.alvin.gfad.type.ItemExpand
 import com.alvin.gfad.mode.SelectSealed
+import com.alvin.gfad.type.ItemSticky
 import java.util.concurrent.atomic.AtomicLong
 
 /**
@@ -69,7 +71,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     /**
      * 是否需要为点击事件设置防抖,默认为true.
      */
-    var isShake = true
+    var shakeEnable = true
 
     /**
      * 已选择条目的Position
@@ -88,15 +90,10 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     /** 已选择条目数量 */
     val checkedCount: Int get() = checkedPosition.size
 
-    /**
-     * 是否全选
-     */
-    fun isCheckedAll(): Boolean = checkedCount == _list.size
-
     override fun getItemViewType(position: Int): Int {
         val item = getData<Any>(position)
         return typeLayouts[item.javaClass]?.invoke(item, position) ?: throw NoSuchPropertyException(
-            "没有找到该类型属性"
+            "没有找到该类型的布局"
         )
     }
 
@@ -147,6 +144,19 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
         _onItemLongClick = onItemLongClick
     }
 
+
+    /**
+     * 选择回调
+     */
+    fun onChecked(block: (position: Int, checked: Boolean, isAll: Boolean) -> Unit) {
+        onChecked = block
+    }
+
+    /**
+     * 监听悬停
+     */
+    var onStickyAttachListener: ViewSetup? = null
+
     /**
      * 为Recyclerview添加ItemView的子View的点击事件回调
      */
@@ -172,6 +182,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     }
 
     /**
+     * 全选或取消全选
      * 单选模式下不可全选, 但可以取消单选
      * @param checked true为全选, false 取消全部选择
      */
@@ -194,7 +205,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     }
 
     /**
-     * 设置选中
+     * 设置指定索引选中状态
      *
      * @param position 当前索引
      * @param checked true: 选中,  false: 取消选中
@@ -224,7 +235,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     }
 
     /**
-     * 切换选中
+     * 切换指定索引选中状态
      */
     fun checkedSwitch(position: Int) {
         if (isCheck()) return
@@ -241,13 +252,6 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
      * @return true: 需要选中, false: 不需要选中
      */
     private fun isCheck() = onChecked != null && selectModel !is SelectSealed.None
-
-    /**
-     * 选择回调
-     */
-    fun onChecked(block: (position: Int, checked: Boolean, isAll: Boolean) -> Unit) {
-        onChecked = block
-    }
 
     /**
      * 添加指定类型布局, 这里的泛型类型需要和Model类型一致, 否则无法找到向右布局
@@ -352,6 +356,22 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     }
 
     /**
+     * 是否全选
+     */
+    fun isCheckedAll(): Boolean = checkedCount == _list.size
+
+    /**
+     * 通过position判断是否启用吸顶
+     */
+    fun isSticky(position: Int): Boolean {
+        val item = getData<Any>(position)
+        if (item is ItemSticky){
+            return item.isSticky
+        }
+        return false
+    }
+
+    /**
      * 数据与指定size相同时刷新适配器
      *
      * @param size 新数据数量
@@ -381,7 +401,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
             _onBind?.invoke(this)
             // 点击事件
             _onItemClick?.let { itemClick ->
-                if (isShake) {
+                if (shakeEnable) {
                     itemView.setOnClickListener(ShakeClickListener {
                         itemClick.invoke(this@BaseViewHolder, this)
                     })
@@ -401,7 +421,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
             // 子Item点击事件
             for (clickListener in clickListeners) {
                 val view = itemView.findViewById<View>(clickListener.key) ?: continue
-                if (isShake) {
+                if (shakeEnable) {
                     view.setOnClickListener(ShakeClickListener {
                         clickListener.value.invoke(this@BaseViewHolder, clickListener.key)
                     })
