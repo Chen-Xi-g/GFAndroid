@@ -43,11 +43,11 @@ class ExpandActivity :
     }
 
     override fun obtainData() {
-        viewModel.onExpand()
+        vm.onExpand()
     }
 
     override fun registerObserver() {
-        viewModel.listData.observe(this) {
+        vm.listData.observe(this) {
             binding.expandList.setData(it)
         }
     }

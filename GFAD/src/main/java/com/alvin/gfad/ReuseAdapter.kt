@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alvin.gfad.listeners.ViewSetup
 import com.alvin.gfad.mode.ICheckedEntity
-import com.alvin.gfad.type.ItemExpand
 import com.alvin.gfad.mode.SelectSealed
+import com.alvin.gfad.type.ItemExpand
 import com.alvin.gfad.type.ItemSticky
 import java.util.concurrent.atomic.AtomicLong
 
 /**
  * <h3> 作用类描述：RecyclerView 可重复利用的适配器</h3>
  *
- * @Package :        com.alvin.gfad
+ * @Package :        com.alvin.rvad
  * @Date :           2022/7/24
  * @author 高国峰
  */
@@ -69,6 +69,29 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     var typeLayouts = mutableMapOf<Class<*>, Any.(Int) -> Int>()
 
     /**
+     * 添加头布局,适配多布局.
+     *
+     * 头布局.(索引) -> 布局ID
+     *  Any.(Int) -> Int
+     */
+    var headerList = mutableListOf<Any?>()
+
+    /**
+     * 添加尾布局,适配多布局.
+     */
+    var footerList = mutableListOf<Any?>()
+
+    /**
+     * 获取头布局数量
+     */
+    val headerCount get() = headerList.size
+
+    /**
+     * 获取尾布局数量
+     */
+    val footerCount get() = footerList.size
+
+    /**
      * 是否需要为点击事件设置防抖,默认为true.
      */
     var shakeEnable = true
@@ -89,6 +112,11 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
 
     /** 已选择条目数量 */
     val checkedCount: Int get() = checkedPosition.size
+
+    /**
+     * 监听悬停
+     */
+    var onStickyAttachListener: ViewSetup? = null
 
     override fun getItemViewType(position: Int): Int {
         val item = getData<Any>(position)
@@ -113,7 +141,7 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return _list.size
+        return _list.size + headerCount + footerCount
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -151,11 +179,6 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     fun onChecked(block: (position: Int, checked: Boolean, isAll: Boolean) -> Unit) {
         onChecked = block
     }
-
-    /**
-     * 监听悬停
-     */
-    var onStickyAttachListener: ViewSetup? = null
 
     /**
      * 为Recyclerview添加ItemView的子View的点击事件回调
@@ -254,6 +277,194 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     private fun isCheck() = onChecked != null && selectModel !is SelectSealed.None
 
     /**
+     * 添加头布局
+     *
+     * 头布局本质是就是多布局, 所以也需要像[addType]添加.
+     *
+     * @param header 头布局实体类
+     * @param position 添加到第几个头布局, 如果为负数或大于头布局数量，则添加到最后一个位置。
+     * @param isScrollTop 是否滑动到顶部
+     */
+    fun addHeader(header: Any, position: Int = -1, isScrollTop: Boolean = false) {
+        if (position == -1 || position >= headerCount) {
+            headerList.add(header)
+            notifyItemInserted(headerCount)
+        } else {
+            headerList.add(position, header)
+            notifyItemInserted(position)
+        }
+        if (isScrollTop) {
+            scrollRv(0)
+        }
+    }
+
+    /**
+     * 设置旧的头布局为新的头布局
+     *
+     * @param oldHeader 旧头布局
+     * @param newHeader 新头布局
+     * @param isScrollTop 是否滑动到顶部
+     */
+    fun setHeader(oldHeader: Any, newHeader: Any, isScrollTop: Boolean = false) {
+        headerList[headerList.indexOf(oldHeader)] = newHeader
+        notifyItemChanged(headerList.indexOf(oldHeader))
+        if (isScrollTop) {
+            scrollRv(0)
+        }
+    }
+
+    /**
+     * 设置指定头布局索引为新的头布局
+     * @param position 头布局索引
+     * @param newHeader 新头布局
+     * @param isScrollTop 是否滑动到顶部
+     */
+    fun setHeader(position: Int, newHeader: Any, isScrollTop: Boolean = false) {
+        headerList[position] = newHeader
+        notifyItemChanged(position)
+        if (isScrollTop) {
+            scrollRv(0)
+        }
+    }
+
+    /**
+     * 通过指定类型删除头布局
+     */
+    fun removeHeader(type: Any) {
+        if (headerList.contains(type)) {
+            headerList.forEachIndexed { index, any ->
+                if (any == type) {
+                    headerList.removeAt(index)
+                    notifyItemRemoved(index)
+                }
+            }
+        }
+    }
+
+    /**
+     * 通过指定索引删除头布局
+     */
+    fun removeHeader(position: Int) {
+        if (position >= headerCount) return
+        headerList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    /**
+     * 删除所有头布局
+     */
+    fun removeHeaderAll() {
+        if (headerCount > 0) {
+            headerList.clear()
+            notifyItemRangeRemoved(0, headerCount)
+        }
+    }
+
+    /**
+     * 判断指定索引是否为头布局
+     *
+     * @param position Int 索引
+     * @return Boolean true: 是头布局, false: 不是头布局
+     */
+    fun isHeader(position: Int): Boolean = (position < headerCount && headerCount > 0)
+
+    /**
+     * 添加尾布局
+     *
+     * 尾布局本质是就是多布局, 所以也需要像[addType]添加.
+     *
+     * @param footer 尾布局实体类
+     * @param position 添加到第几个尾布局, 如果为负数或大于尾布局数量，则添加到最后一个位置。
+     * @param isScrollBottom 是否滑动到底部
+     */
+    fun addFooter(footer: Any, position: Int = -1, isScrollBottom: Boolean = false) {
+        if (position == -1 || position >= footerCount) {
+            footerList.add(footer)
+            notifyItemInserted(itemCount)
+        } else {
+            footerList.add(position, footer)
+            notifyItemInserted(itemCount)
+        }
+        if (isScrollBottom) {
+            scrollRv(itemCount - 1)
+        }
+    }
+
+    /**
+     * 替换指定类型尾布局
+     *
+     * @param oldFooter 旧的尾部局
+     * @param newFooter 新的尾部局
+     * @param isScrollBottom 是否滑动到底部
+     */
+    fun setFooter(oldFooter: Any, newFooter: Any, isScrollBottom: Boolean = false) {
+        footerList[footerList.indexOf(oldFooter)] = newFooter
+        notifyItemChanged(itemCount)
+        if (isScrollBottom) {
+            scrollRv(itemCount - 1)
+        }
+    }
+
+    /**
+     * 通过指定类型删除尾布局
+     *
+     * @param type Any 类型
+     */
+    fun removeFooter(type: Any) {
+        if (footerList.contains(type)) {
+            footerList.forEachIndexed { index, any ->
+                if (any == type) {
+                    footerList.removeAt(index)
+                    notifyItemRemoved(headerCount + _list.size + index)
+                }
+            }
+        }
+    }
+
+    /**
+     * 通过指定索引删除尾布局
+     *
+     * @param position Int 索引
+     */
+    fun removeFooter(position: Int) {
+        if (position >= footerCount) return
+        footerList.removeAt(position)
+        notifyItemRemoved(headerCount + _list.size + position)
+    }
+
+    /**
+     * 删除所有尾布局
+     */
+    fun removeFooterAll() {
+        if (footerCount > 0) {
+            footerList.clear()
+            notifyItemRangeRemoved(headerCount + _list.size, footerCount)
+        }
+    }
+
+    /**
+     * 判断指定索引是否为尾布局
+     *
+     * @param position Int 索引
+     * @return Boolean true: 是尾布局, false: 不是尾布局
+     */
+    fun isFooter(position: Int): Boolean =
+        (position >= headerCount + _list.size && footerCount > 0 && position < itemCount)
+
+    /**
+     * RecyclerView滑动到指定位置
+     */
+    fun scrollRv(lastIndex: Int) {
+        rv?.let { rv ->
+            rv.scrollToPosition(lastIndex)
+            (rv.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(
+                lastIndex,
+                0
+            )
+        }
+    }
+
+    /**
      * 添加指定类型布局, 这里的泛型类型需要和Model类型一致, 否则无法找到向右布局
      *
      * @param layoutRes Int
@@ -275,7 +486,28 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
      * 根据索引获取模型数据
      */
     fun <T> getData(index: Int): T {
-        return _list[index] as T
+        return if (isHeader(index)) {
+            headerList[index] as T
+        } else if (isFooter(index)) {
+            footerList[index - headerCount - _list.size] as T
+        } else {
+            _list[index - headerCount] as T
+        }
+    }
+
+    /**
+     * 根据指定索引返回数据模型,如果没有则返回null
+     * @param index Int
+     * @return T
+     */
+    fun <T> getDataOrNull(index: Int): T? {
+        return if (isHeader(index)) {
+            headerList[index] as? T
+        } else if (isFooter(index)) {
+            footerList[index - headerCount - _list.size] as? T
+        } else {
+            _list.getOrNull(index - headerCount) as? T
+        }
     }
 
     /**
@@ -342,6 +574,18 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
     }
 
     /**
+     * 删除指定类型数据
+     *
+     * @param item Any? 数据源
+     */
+    fun remove(item: Any?) {
+        if (_list.contains(item)) {
+            _list.remove(item)
+            notifyDataSetChanged()
+        }
+    }
+
+    /**
      * 删除指定索引数据
      *
      * @param index Int 索引
@@ -364,8 +608,8 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
      * 通过position判断是否启用吸顶
      */
     fun isSticky(position: Int): Boolean {
-        val item = getData<Any>(position)
-        if (item is ItemSticky){
+        val item = getDataOrNull<Any>(position)
+        if (item is ItemSticky) {
             return item.isSticky
         }
         return false
@@ -388,12 +632,40 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
         lateinit var _item: Any private set
 
         /**
-         * 使用DataBinding后通过此方法获取ViewBinding
+         * 使用DataBinding后通过此方法获取ViewDataBinding
          *
          * @return DB?
          */
         fun <DB : ViewDataBinding> getBinding(): DB? {
-            return DataBindingUtil.bind(itemView)
+            return if (isHeader(adapterPosition) || isFooter(adapterPosition)) {
+                null
+            } else {
+                DataBindingUtil.bind(itemView)
+            }
+        }
+
+        /**
+         * 获取头布局的ViewDataBinding
+         * @return DB? 如果不是头布局,则返回null
+         */
+        fun <DB : ViewDataBinding> getHeaderBinding(): DB? {
+            return if (isHeader(adapterPosition)) {
+                DataBindingUtil.bind(itemView)
+            } else {
+                null
+            }
+        }
+
+        /**
+         * 获取底布局的ViewDataBinding
+         * @return DB? 如果不是底布局,则返回null
+         */
+        fun <DB : ViewDataBinding> getFooterBinding(): DB? {
+            return if (isFooter(adapterPosition)) {
+                DataBindingUtil.bind(itemView)
+            } else {
+                null
+            }
         }
 
         internal fun onBind(item: Any) {

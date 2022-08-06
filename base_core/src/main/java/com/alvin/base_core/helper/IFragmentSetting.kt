@@ -1,24 +1,24 @@
 package com.alvin.base_core.helper
 
-import android.app.Activity
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import com.alvin.base_core.R
 import com.alvin.base_core.model.BarModel
 
 /**
- * <h3> 作用类描述：设置Activity默认的相关属性</h3>
- *
- * <p> 提供默认的全局Activity属性设置, 避免每次创建新的项目都需要进行底层修改. <p>
+ * <h3> 作用类描述：设置Fragment默认的相关属性</h3>
  *
  * @Package :        com.alvin.base_core.helper
- * @Date :           2022/7/23
+ * @Date :           2022/8/6
  * @author 高国峰
  */
-interface IActivitySetting {
+interface IFragmentSetting {
 
     /**
      * 初始化Bar的相关属性
+     *
+     * 如果在Fragment中设置，会覆盖原有Activity的设置
      */
     fun barModel(): BarModel
 
@@ -46,10 +46,10 @@ interface IActivitySetting {
     /**
      * 标题布局回调
      *
-     * @param activity
+     * @param fragment
      * @param titleLayoutBinding ViewDataBinding
      */
-    fun titleLayoutClickListener(activity: Activity, titleLayoutBinding: ViewDataBinding)
+    fun titleLayoutClickListener(fragment: Fragment, titleLayoutBinding: ViewDataBinding)
 
     /*        正在加载属性              */
 

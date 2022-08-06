@@ -1,4 +1,4 @@
-package com.alvin.base_core.base
+package com.alvin.base_core.base.fragment
 
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.ViewModelProvider
@@ -6,15 +6,16 @@ import com.alvin.base_core.base.view_model.BaseViewModel
 import java.lang.reflect.ParameterizedType
 
 /**
- * <h3> 作用类描述：实现ViewModel的Activity基类</h3>
+ * <h3> 作用类描述：实现ViewModel的Fragment基类</h3>
  *
- * @Package :        com.alvin.base_core.base
- * @Date :           2022/7/24
+ * @Package :        com.alvin.base_core.base.fragment
+ * @Date :           2022/8/6
  * @author 高国峰
+ *
+ * @property VM BaseViewModel
  */
-abstract class BaseVMActivity<VM : BaseViewModel>(@LayoutRes private val contentLayoutRes: Int) :
-    BaseNetworkActivity(contentLayoutRes) {
-
+abstract class BaseVMFragment<VM : BaseViewModel>(@LayoutRes private val contentLayoutRes: Int) :
+    BaseNetworkFragment(contentLayoutRes) {
     /**
      * 获取泛型中的ViewModel实例
      */

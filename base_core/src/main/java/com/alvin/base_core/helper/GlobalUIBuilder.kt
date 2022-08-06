@@ -18,7 +18,7 @@ object GlobalUIBuilder {
      * 加载默认的 Fragment 设置
      *
      */
-//    var iSettingBaseFragment: ISettingBaseFragment = DefaultSettingFragment()
+    var iSettingBaseFragment: IFragmentSetting = DefaultSettingFragment()
 
     /**
      * 全局初始化

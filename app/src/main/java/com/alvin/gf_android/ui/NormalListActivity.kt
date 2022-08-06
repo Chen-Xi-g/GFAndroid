@@ -96,11 +96,11 @@ class NormalListActivity :
     }
 
     override fun obtainData() {
-        viewModel.getTestData()
+        vm.getTestData()
     }
 
     override fun registerObserver() {
-        viewModel.listData.observe(this) {
+        vm.listData.observe(this) {
             binding.list.setData(it)
         }
     }

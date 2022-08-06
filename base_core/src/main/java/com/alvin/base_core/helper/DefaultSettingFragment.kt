@@ -1,7 +1,7 @@
 package com.alvin.base_core.helper
 
-import android.app.Activity
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import com.alvin.base_core.databinding.LayoutGfAndroidMvvmBaseTitleBinding
 import com.alvin.base_core.model.BarModel
 
@@ -12,17 +12,17 @@ import com.alvin.base_core.model.BarModel
  * @Date :           2022/7/23
  * @author 高国峰
  */
-class DefaultSettingActivity : IActivitySetting {
+class DefaultSettingFragment : IFragmentSetting {
 
     override fun barModel(): BarModel = BarModel()
 
     override fun isShowTitleLayout(): Boolean = true
 
-    override fun titleLayoutClickListener(activity: Activity, titleLayoutBinding: ViewDataBinding) {
+    override fun titleLayoutClickListener(fragment: Fragment, titleLayoutBinding: ViewDataBinding) {
         if (titleLayoutBinding is LayoutGfAndroidMvvmBaseTitleBinding) {
             // 关闭Activity
             titleLayoutBinding.ibBack.setOnClickListener {
-                activity.finish()
+                fragment.activity?.finish()
             }
         }
     }

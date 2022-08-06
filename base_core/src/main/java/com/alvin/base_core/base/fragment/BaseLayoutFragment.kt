@@ -1,6 +1,9 @@
-package com.alvin.base_core.base
+package com.alvin.base_core.base.fragment
 
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.LayoutRes
@@ -13,21 +16,18 @@ import com.gyf.immersionbar.ktx.immersionBar
 /**
  * <h3> 作用类描述：布局进初始化</h3>
  *
- * @Package :        com.alvin.base_core.base
- * @Date :           2022/7/24
+ * @Package :        com.alvin.base_core.base.fragment
+ * @Date :           2022/8/6
  * @author 高国峰
  *
- * @param contentLayoutRes 内容布局资源ID
+ * @param contentLayoutRes 内容布局资源id
  */
-abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) :
-    BaseDialogActivity() {
-
+abstract class BaseLayoutFragment(@LayoutRes private val contentLayoutRes: Int) :
+    BaseDialogFragment() {
     /**
      * 缺省页布局，携带Title
      */
-    val baseRootLayout: LayoutGfAndroidMvvmBaseBinding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.layout_gf_android_mvvm_base)
-    }
+    lateinit var baseRootLayout: LayoutGfAndroidMvvmBaseBinding
 
     /**
      * 标题布局
@@ -59,6 +59,22 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
      */
     private val toast by lazy {
         setToast()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        baseRootLayout =
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.layout_gf_android_mvvm_base,
+                container,
+                false
+            )
+        baseRootLayout.lifecycleOwner = this
+        return baseRootLayout.root
     }
 
     override fun initBinding() {
@@ -101,7 +117,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
         // 全局标题事件点击监听
         titleLayout?.let {
             it.lifecycleOwner = this
-            iActivitySetting.titleLayoutClickListener(this, it)
+            iFragmentSetting.titleLayoutClickListener(this, it)
         }
     }
 
@@ -184,7 +200,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
      *
      * @return Boolean true显示，false不显示
      */
-    open fun isShowTitleLayout(): Boolean = iActivitySetting.isShowTitleLayout()
+    open fun isShowTitleLayout(): Boolean = iFragmentSetting.isShowTitleLayout()
 
     /**
      * 错误布局重试点击监听
@@ -196,13 +212,13 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
     /**
      * @return Int 点击重试的ID
      */
-    open fun setErrorRetryId() = iActivitySetting.errorRetryId()
+    open fun setErrorRetryId() = iFragmentSetting.errorRetryId()
 
     /**
      * 设置错误内容显示ID
      * @return Int
      */
-    open fun setErrorMessageId() = iActivitySetting.errorMessageId()
+    open fun setErrorMessageId() = iFragmentSetting.errorMessageId()
 
     /**
      * 设置标题布局
@@ -210,7 +226,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
      * @return 当值为-1时，不显示标题布局
      */
     @LayoutRes
-    open fun setTitleLayout(): Int = iActivitySetting.titleBarLayout()
+    open fun setTitleLayout(): Int = iFragmentSetting.titleBarLayout()
 
     /**
      * 设置加载布局
@@ -218,7 +234,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
      * @return 当值为-1时，不显示加载布局
      */
     @LayoutRes
-    open fun setLoadingLayout(): Int = iActivitySetting.loadingLayout()
+    open fun setLoadingLayout(): Int = iFragmentSetting.loadingLayout()
 
     /**
      * 设置错误布局
@@ -226,7 +242,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
      * @return 当值为-1时，不显示错误布局
      */
     @LayoutRes
-    open fun setErrorLayout(): Int = iActivitySetting.errorLayout()
+    open fun setErrorLayout(): Int = iFragmentSetting.errorLayout()
 
     /**
      * 设置空数据布局
@@ -234,7 +250,7 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
      * @return 当值为-1时，不显示空数据布局
      */
     @LayoutRes
-    open fun setEmptyLayout(): Int = iActivitySetting.emptyLayout()
+    open fun setEmptyLayout(): Int = iFragmentSetting.emptyLayout()
 
     /**
      * 获取标题布局
@@ -357,12 +373,11 @@ abstract class BaseLayoutActivity(@LayoutRes private val contentLayoutRes: Int) 
     }
 
     open fun setToast(): Toast {
-        return Toast.makeText(this, "", Toast.LENGTH_SHORT)
+        return Toast.makeText(requireContext(), "", Toast.LENGTH_SHORT)
     }
 
     override fun onStop() {
         super.onStop()
         toast.cancel()
     }
-
 }
