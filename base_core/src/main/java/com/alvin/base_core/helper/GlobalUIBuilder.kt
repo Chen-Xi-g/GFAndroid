@@ -28,9 +28,9 @@ object GlobalUIBuilder {
      */
     fun initSetting(
         iSettingBaseActivity: IActivitySetting = DefaultSettingActivity(),
-//        iSettingBaseFragment: ISettingBaseFragment = DefaultSettingFragment()
+        iSettingBaseFragment: IFragmentSetting = DefaultSettingFragment()
     ) {
         GlobalUIBuilder.iSettingBaseActivity = iSettingBaseActivity
-//        GlobalMVVMBuilder.iSettingBaseFragment = iSettingBaseFragment
+        GlobalUIBuilder.iSettingBaseFragment = iSettingBaseFragment
     }
 }
