@@ -41,13 +41,17 @@ abstract class ProtectedUnPeekLiveData<T>(val isAllowNullValue: Boolean = true) 
         super.observeForever(createObserverForeverWrapper(observer, startVersion))
     }
 
-    public override fun setValue(value: T?) {
+    public override fun setValue(value: T) {
         mCurrentVersion.getAndIncrement()
         super.setValue(value)
     }
 
     override fun getValue(): T? {
         return super.getValue()
+    }
+
+    public override fun postValue(value: T) {
+        super.postValue(value)
     }
 
     /**

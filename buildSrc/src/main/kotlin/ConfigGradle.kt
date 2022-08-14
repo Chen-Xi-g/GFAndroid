@@ -14,7 +14,7 @@ object JetpackMaven {
     /*   发布插件的相关属性     */
 
     const val mavenGroup = "com.alvin.gf_android"
-    const val mavenVersion = "0.0.2"
+    const val mavenVersion = "0.0.3"
 
 }
 
