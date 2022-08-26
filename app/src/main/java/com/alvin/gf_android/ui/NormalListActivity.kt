@@ -109,7 +109,7 @@ class NormalListActivity :
      * 初始化适配器
      */
     private fun initAdapter() {
-        binding.list.linear().setup {
+        binding.list.linear().dividerSpace(resources.getDimension(com.alvin.base_core.R.dimen.dp_8).toInt()).setup {
             selectModel = SelectSealed.Single
             addType<NormalEntity>(R.layout.item_normal)
             // onBindViewHolder 回调

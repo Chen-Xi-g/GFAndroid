@@ -1,10 +1,12 @@
 package com.alvin.gfad.utils
 
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.alvin.gfad.ReuseAdapter
 import com.alvin.gfad.layout_manager.*
+import com.alvin.gfad.mode.DividerOrientation
 import com.alvin.gfad.type.ItemSticky
 
 /**
@@ -171,4 +173,44 @@ fun RecyclerView.staggered(
         animator.supportsChangeAnimations = false
     }
     return this
+}
+
+/**
+ * 添加分割线
+ */
+fun RecyclerView.divider(
+    block: DefaultDecoration.() -> Unit
+): RecyclerView{
+    addItemDecoration(DefaultDecoration(context).apply(block))
+    return this
+}
+
+/**
+ * 指定Drawable资源为分割线, 分割线的间距和宽度应在资源文件中配置
+ * @param drawable 描述分割线的drawable
+ * @param orientation 分割线方向, 仅[androidx.recyclerview.widget.GridLayoutManager]需要使用此参数, 其他LayoutManager都是根据其方向自动推断
+ */
+fun RecyclerView.divider(
+    @DrawableRes drawable: Int,
+    orientation: DividerOrientation = DividerOrientation.HORIZONTAL
+): RecyclerView {
+    return divider {
+        setDrawable(drawable)
+        this.orientation = orientation
+    }
+}
+
+/**
+ * 设置空白间距分割
+ * @param space item的空白间距
+ * @param orientation 分割线方向, 仅[androidx.recyclerview.widget.GridLayoutManager]需要使用此参数, 其他LayoutManager都是根据其方向自动推断
+ */
+fun RecyclerView.dividerSpace(
+    space: Int,
+    orientation: DividerOrientation = DividerOrientation.HORIZONTAL,
+): RecyclerView {
+    return divider {
+        setDivider(space)
+        this.orientation = orientation
+    }
 }
