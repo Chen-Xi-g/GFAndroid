@@ -1,0 +1,11 @@
+apply from:("../gradle/build_library.gradle")
+dependencies {
+    // 选择图片
+    api Dependencies.selectorPicture
+    // 加载图片
+    api Dependencies.glide
+    api Dependencies.glideOkHttp
+    kapt Dependencies.annotationGlide
+    // 大图预览
+    api Dependencies.bigImage
+}

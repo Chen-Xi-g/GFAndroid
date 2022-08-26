@@ -17,7 +17,7 @@ import com.alvin.gf_android.databinding.LayoutLocalTitleBinding
  * @author 高国峰
  */
 class AppSettingActivity : IActivitySetting {
-    override fun barModel(): BarModel = BarModel(0, true, R.color.black, false)
+    override fun barModel(): BarModel = BarModel(0, true, android.R.color.transparent, false)
 
     override fun dialogSetting(): IDialogSetting {
         return AppSettingDialog()

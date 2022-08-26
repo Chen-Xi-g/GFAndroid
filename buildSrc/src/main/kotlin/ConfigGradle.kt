@@ -49,6 +49,8 @@ object Dependencies {
 
     /* 第三方 */
     private const val immersionBarVersion = "3.2.2"
+    // 图片选择
+    private const val selectorPictureVersion = "v2.7.3-rc10"
 
 
     /*       Android  基础组件库         */
@@ -78,4 +80,13 @@ object Dependencies {
 
     // 透明状态栏  kotlin扩展（可选）
     const val immersionBarKt = "com.geyifeng.immersionbar:immersionbar-ktx:${immersionBarVersion}"
+
+    // 图片视频选择器
+    const val selectorPicture = "io.github.lucksiege:pictureselector:$selectorPictureVersion"
+    // 图片加载库
+    const val glide = "com.github.bumptech.glide:glide:4.13.2"
+    const val annotationGlide = "com.github.bumptech.glide:compiler:4.13.2"
+    const val glideOkHttp = "com.github.bumptech.glide:okhttp3-integration:4.13.2"
+    // BigImageViewPager https://github.com/SherlockGougou/BigImageViewPager
+    const val bigImage = "com.github.SherlockGougou:BigImageViewPager:androidx-7.0.3"
 }

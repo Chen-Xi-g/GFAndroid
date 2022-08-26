@@ -14,6 +14,7 @@ import com.alvin.gf_android.vm.NormalViewModel
 import com.alvin.gfad.mode.SelectSealed
 import com.alvin.gfad.utils.*
 import com.bumptech.glide.Glide
+import com.ylink.picture.exts.seePhoto
 import java.util.*
 
 /**
@@ -61,7 +62,7 @@ class NormalListActivity :
                                 randomInt,
                                 "我是新添加的Item${randomInt}",
                                 "我是新添加新的Item内容${randomInt}",
-                                "http://cdn.u2.huluxia.com/g3/M02/36/6C/wKgBOVwPoAmASl2jAADug4ZLXoo747.jpg"
+                                "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2Fedpic%2Ff4%2F6c%2F1c%2Ff46c1c4d5dbee45fade6a85de81edba9.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664097421&t=24775c585daf441ae1e89c04d952d433"
                             )
                             binding.list.addData(entity, 1)
                         }
@@ -109,7 +110,8 @@ class NormalListActivity :
      * 初始化适配器
      */
     private fun initAdapter() {
-        binding.list.linear().dividerSpace(resources.getDimension(com.alvin.base_core.R.dimen.dp_8).toInt()).setup {
+        binding.list.linear()
+            .dividerSpace(resources.getDimension(com.alvin.base_core.R.dimen.dp_8).toInt()).setup {
             selectModel = SelectSealed.Single
             addType<NormalEntity>(R.layout.item_normal)
             // onBindViewHolder 回调
@@ -131,7 +133,8 @@ class NormalListActivity :
             }
             // Item长按事件
             onItemLongClick {
-                "长按了第${adapterPosition}个Item".toast()
+                // 查看图片
+                seePhoto(list.map { (it as? NormalEntity)?.imageUrl ?: "" }, adapterPosition)
             }
             // 子Item点击事件
             addOnItemChildClickListener(R.id.itemIvCover, R.id.itemTvContent) { viewId ->
