@@ -2,7 +2,9 @@ package com.alvin.gf_android
 
 import android.app.Application
 import com.alvin.base_core.helper.GlobalUIBuilder
+import com.alvin.gf_android.model.GlideImageEngine
 import com.alvin.gf_android.setting.AppSettingActivity
+import com.alvin.video.utils.VideoUtil
 
 /**
  * <h3> 作用类描述：</h3>
@@ -21,6 +23,8 @@ class App : Application() {
         super.onCreate()
         instance = this
         GlobalUIBuilder.initSetting(AppSettingActivity())
+        VideoUtil.init(this)
+        VideoUtil.imageEngine = GlideImageEngine()
     }
 
 }

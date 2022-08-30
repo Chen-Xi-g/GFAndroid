@@ -47,4 +47,5 @@ dependencies {
     implementation project(":base_core")
     implementation project(":GFAD")
     implementation project(":picture")
+    implementation project(":video")
 }

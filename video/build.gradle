@@ -1,0 +1,11 @@
+apply from:("../gradle/build_library.gradle")
+dependencies {
+
+    api Dependencies.dkPlayer
+    api Dependencies.dkPlayerUI
+    api Dependencies.dkPlayerEXO
+    api Dependencies.dkPlayerVideoCache
+    compileOnly Dependencies.glide
+    compileOnly project(":GFAD")
+
+}

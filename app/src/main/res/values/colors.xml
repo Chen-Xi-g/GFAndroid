@@ -10,4 +10,7 @@
     <color name="title_color">#FF000000</color>
     <color name="content_color">#FF333333</color>
     <color name="color_ccc">#CCCCCC</color>
+    <!--覆盖播放器颜色资源，自定义颜色内容-->
+    <color name="dkplayer_theme_color">#2196F3</color>
+    <color name="dkplayer_theme_color_translucent">#992196F3</color>
 </resources>

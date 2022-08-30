@@ -5,10 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.alvin.gf_android.databinding.ActivityMainBinding
-import com.alvin.gf_android.ui.ExpandActivity
-import com.alvin.gf_android.ui.GlobalActivity
-import com.alvin.gf_android.ui.LocalActivity
-import com.alvin.gf_android.ui.NormalListActivity
+import com.alvin.gf_android.ui.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +19,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnLocalActivity.setOnClickListener(onClickListener)
         binding.btnListActivity.setOnClickListener(onClickListener)
         binding.btnExpandActivity.setOnClickListener(onClickListener)
+        binding.btnTikTokActivity.setOnClickListener(onClickListener)
+        binding.btnDefVideo.setOnClickListener(onClickListener)
     }
 
     private val onClickListener = View.OnClickListener {
@@ -37,6 +36,12 @@ class MainActivity : AppCompatActivity() {
             }
             binding.btnExpandActivity -> {
                 startActivity(ExpandActivity.newIntent(this))
+            }
+            binding.btnTikTokActivity -> {
+                startActivity(TikTokActivity.newIntent(this))
+            }
+            binding.btnDefVideo -> {
+                startActivity(DefVideoActivity.newIntent(this))
             }
         }
     }

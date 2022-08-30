@@ -30,6 +30,8 @@
         <activity android:name=".ui.GlobalActivity" />
         <activity android:name=".ui.LocalActivity" />
         <activity android:name=".ui.NormalListActivity" />
+        <activity android:name=".ui.TikTokActivity" />
+        <activity android:name=".ui.DefVideoActivity" />
     </application>
 
 </manifest>

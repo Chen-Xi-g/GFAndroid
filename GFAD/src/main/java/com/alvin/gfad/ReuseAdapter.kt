@@ -626,6 +626,19 @@ open class ReuseAdapter : RecyclerView.Adapter<ReuseAdapter.BaseViewHolder>() {
         }
     }
 
+    /**
+     * 根据索引和控件Id获取控件
+     *
+     * @param position Int 索引
+     * @param id Int 控件Id
+     */
+    fun <T : View> getView(position: Int, id: Int): T? {
+        val recyclerView = rv ?: return null
+        val viewHolder =
+            recyclerView.findViewHolderForLayoutPosition(position) as BaseViewHolder? ?: return null
+        return viewHolder.findView(id)
+    }
+
     inner class BaseViewHolder(view: View) :
         RecyclerView.ViewHolder(view) {
 

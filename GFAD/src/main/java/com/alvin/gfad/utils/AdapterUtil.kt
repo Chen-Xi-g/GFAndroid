@@ -1,13 +1,14 @@
 package com.alvin.gfad.utils
 
-import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.viewpager2.widget.ViewPager2
 import com.alvin.gfad.ReuseAdapter
-import com.alvin.gfad.layout_manager.*
+import com.alvin.gfad.layout_manager.StickyGridLayoutManager
+import com.alvin.gfad.layout_manager.StickyLinearLayoutManager
+import com.alvin.gfad.layout_manager.StickyStaggeredGridLayoutManager
 import com.alvin.gfad.mode.DividerOrientation
-import com.alvin.gfad.type.ItemSticky
 
 /**
  * <h3> 作用类描述：适配器工具类，扩展函数使用</h3>
@@ -22,6 +23,10 @@ import com.alvin.gfad.type.ItemSticky
  * 获取binding适配器
  */
 val RecyclerView.reuseAdapter
+    get() = adapter as? ReuseAdapter
+        ?: throw NullPointerException("RecyclerView has no BindingAdapter")
+
+val ViewPager2.reuseAdapter
     get() = adapter as? ReuseAdapter
         ?: throw NullPointerException("RecyclerView has no BindingAdapter")
 
@@ -91,6 +96,15 @@ fun RecyclerView.setData(position: Int, data: Any) {
  */
 fun RecyclerView.setup(
     block: ReuseAdapter.(RecyclerView) -> Unit
+): ReuseAdapter {
+    val adapter = ReuseAdapter()
+    adapter.block(this)
+    this.adapter = adapter
+    return adapter
+}
+
+fun ViewPager2.setup(
+    block: ReuseAdapter.(ViewPager2) -> Unit
 ): ReuseAdapter {
     val adapter = ReuseAdapter()
     adapter.block(this)
