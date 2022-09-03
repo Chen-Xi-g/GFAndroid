@@ -7,3 +7,5 @@
 > 这个库会将自己所想到的东西集成到一起。
 
 架构文档请查看[Wiki](https://github.com/Chen-Xi-g/GFAndroid/wiki)
+
+[![](https://jitpack.io/v/Chen-Xi-g/GFAndroid.svg)](https://jitpack.io/#Chen-Xi-g/GFAndroid)
