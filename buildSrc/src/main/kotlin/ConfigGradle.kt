@@ -14,7 +14,7 @@ object JetpackMaven {
     /*   发布插件的相关属性     */
 
     const val mavenGroup = "com.alvin.gf_android"
-    const val mavenVersion = "0.0.4"
+    const val mavenVersion = "0.1.0"
 
 }
 
@@ -23,7 +23,7 @@ object JetpackMaven {
  */
 object AndroidConfig {
     const val compileSdk = 31
-    const val applicationId = "com.alvin.gf_android"
+    const val applicationId = "com.alvin.sample"
     const val minSdk = 21
     const val targetSdk = 31
     const val versionCode = 1
@@ -36,7 +36,7 @@ object AndroidConfig {
  */
 object Dependencies {
 
-    private const val kotlinVersion = "1.5.30"
+    private const val kotlinVersion = "1.7.20"
     private const val coreVersion = "1.7.0"
     private const val appcompatVersion = "1.3.0"
     private const val materialVersion = "1.4.0"
@@ -80,33 +80,8 @@ object Dependencies {
 
     /*       第三方组件库               */
 
-    // 透明状态栏  基础依赖包，必须要依赖
-    const val immersionBar = "com.geyifeng.immersionbar:immersionbar:${immersionBarVersion}"
-
-    // 透明状态栏  kotlin扩展（可选）
-    const val immersionBarKt = "com.geyifeng.immersionbar:immersionbar-ktx:${immersionBarVersion}"
-
     /**
-     * 视频播放器, 默认使用IJKPlayer播放内核
-     * [JZVideo](https://github.com/Jzvd/JZVideo)
+     * Android UtilCode
      */
-    const val dkPlayer = "xyz.doikki.android.dkplayer:dkplayer-java:${dkPlayerVersion}"
-    const val dkPlayerUI = "xyz.doikki.android.dkplayer:dkplayer-ui:${dkPlayerVersion}"
-
-    // 播放器内核
-    const val dkPlayerEXO = "xyz.doikki.android.dkplayer:player-exo:${dkPlayerVersion}"
-
-    //视频缓存
-    const val dkPlayerVideoCache = "xyz.doikki.android.dkplayer:videocache:${dkPlayerVersion}"
-
-    // 图片视频选择器
-    const val selectorPicture = "io.github.lucksiege:pictureselector:$selectorPictureVersion"
-
-    // 图片加载库
-    const val glide = "com.github.bumptech.glide:glide:4.13.2"
-    const val annotationGlide = "com.github.bumptech.glide:compiler:4.13.2"
-    const val glideOkHttp = "com.github.bumptech.glide:okhttp3-integration:4.13.2"
-
-    // BigImageViewPager https://github.com/SherlockGougou/BigImageViewPager
-    const val bigImage = "com.github.SherlockGougou:BigImageViewPager:androidx-7.0.3"
+    const val utilCode = "com.blankj:utilcodex:1.31.1"
 }

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">sample</string>
+
+    <string name="sample_str_retry">立即重试</string>
+
+    <string name="sample_str_empty_layout">Sample空布局</string>
+    <string name="sample_str_error_layout">Sample错误布局</string>
+    <string name="sample_str_dialog_layout">SampleDialog布局</string>
+    <string name="sample_str_loading_layout">Sample加载布局</string>
+    <string name="sample_str_format_root_layout">Sample自定义RootLayout：%1$s</string>
+    <string name="sample_str_close">Sample关闭</string>
+
+    <string name="custom_str_tip_format">自定义RootLayout：%1$s</string>
+    <string name="sample_str_hint">当前为内容布局</string>
+
+
+</resources>

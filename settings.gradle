@@ -1,6 +1,3 @@
 rootProject.name = "GFAndroid"
-include ':app'
 include ':base_core'
-include ':GFAD'
-include ':video'
-include ':picture'
+include ':sample'

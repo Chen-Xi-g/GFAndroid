@@ -1,86 +1,134 @@
 package com.alvin.base_core.base.fragment
 
-import android.content.Context
-import android.graphics.Color
+import android.app.Activity
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import com.alvin.base_core.helper.GlobalUIBuilder
-import com.alvin.base_core.model.BarModel
-import com.gyf.immersionbar.ktx.immersionBar
+import androidx.annotation.LayoutRes
+import androidx.databinding.ViewDataBinding
+import com.alvin.base_core.R
+import com.alvin.base_core.helper.GlobalUiEngine
 
 /**
- * <h3> 作用类描述：基础的Fragment设置</h3>
+ * <h3> 作用类描述：基础的函数声明</h3>
  *
  * @Package :        com.alvin.base_core.base.fragment
- * @Date :           2022/8/6
+ * @Date :           2022/11/19
  * @author 高国峰
  */
 abstract class BaseFragment : AbstractFragment() {
+
+
     /**
-     * 获取默认的全局设置.
+     * 全局UI配置
      */
-    val iFragmentSetting by lazy(LazyThreadSafetyMode.NONE) {
-        GlobalUIBuilder.iSettingBaseFragment
+    val uiEngine by lazy {
+        setUiEngine()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 初始化 Bar
-        initBar()
-        // 初始化ViewBinding
+        // 初始化DataBinding
         initBinding()
-        //由具体的fragment实现，做视图相关的初始化
+        // 视图初始化
         initView(view, savedInstanceState)
-        //由具体的fragment实现，做数据的初始化
+        // 数据初始化
         obtainData()
     }
 
-    private fun initBar() {
-        val barModel = setBar()
-        immersionBar {
-            if (barModel.statusColor == Color.TRANSPARENT) {
-                transparentStatusBar()
-            } else {
-                statusBarColor(barModel.statusColor)
-            }
-            if (barModel.navigationColor == Color.TRANSPARENT) {
-                transparentNavigationBar()
-            } else {
-                navigationBarColor(barModel.navigationColor)
-            }
-            statusBarDarkFont(barModel.isStatusDarkFont)
-            navigationBarDarkIcon(barModel.isNavigationDarkIcon)
-            init()
-        }
-    }
+    /*局部属性设置*/
 
     /**
-     * 初始化状态栏, 设置状态栏颜色或者透明
-     */
-    open fun setBar(): BarModel = iFragmentSetting.barModel()
-
-    /**
-     * 显示隐藏软键盘
+     * 局部UI配置
      *
-     * @param isOpen true 隐藏 false 显示
+     * @return IUiEngine
      */
-    fun softInputHideOrShow(isOpen: Boolean) {
-        if (activity?.currentFocus == null) return
-        val inputManger =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        if (isOpen) inputManger?.showSoftInput(
-            activity?.currentFocus,
-            InputMethodManager.SHOW_FORCED
-        ) else inputManger?.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
+    open fun setUiEngine() = GlobalUiEngine.uiEngine
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.rootLayout]
+     */
+    open fun rootLayout() = uiEngine.rootLayout()
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.rootLayoutListener]
+     */
+    open fun rootLayoutListener(activity: Activity, rootBinding: ViewDataBinding) =
+        uiEngine.rootLayoutListener(activity, rootBinding)
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.titleLayout]
+     */
+    @LayoutRes
+    open fun titleLayout(): Int = uiEngine.titleLayout()
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.titleLayoutIsShow]
+     */
+    open fun titleLayoutIsShow(): Boolean = uiEngine.titleLayoutIsShow()
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.titleLayoutListener]
+     */
+    open fun titleLayoutListener(activity: Activity, titleBinding: ViewDataBinding) =
+        uiEngine.titleLayoutListener(activity, titleBinding)
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.loadingLayout]
+     */
+    @LayoutRes
+    open fun loadingLayout(): Int = uiEngine.loadingLayout()
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.loadingLayoutListener]
+     */
+    open fun loadingLayoutListener(
+        activity: Activity,
+        loadingBinding: ViewDataBinding,
+        msg: String
+    ) =
+        uiEngine.loadingLayoutListener(activity, loadingBinding, msg)
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.emptyLayout]
+     */
+    open fun emptyLayout(): Int = uiEngine.emptyLayout()
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.emptyLayoutListener]
+     */
+    open fun emptyLayoutListener(activity: Activity, emptyBinding: ViewDataBinding, msg: String) =
+        uiEngine.emptyLayoutListener(activity, emptyBinding, msg)
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.errorLayout]
+     */
+    open fun errorLayout(): Int = uiEngine.errorLayout()
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.errorLayoutListener]
+     */
+    open fun errorLayoutListener(activity: Activity, errorBinding: ViewDataBinding, msg: String) =
+        uiEngine.errorLayoutListener(activity, errorBinding, msg)
+
+    /**
+     * 重新加载
+     */
+    open fun onRetry() {
+
     }
 
     /**
-     * 内存不足 手动调用GC
-     *
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.loadingDialog]
      */
-    override fun onLowMemory() {
-        System.gc()
-        super.onLowMemory()
-    }
+    open fun loadingDialog(
+        activity: Activity,
+        msg: String = getString(R.string.base_engine_str_loading)
+    ) = uiEngine.loadingDialog(activity, msg)
+
+    /**
+     * 具体含义见[com.alvin.base_core.helper.IUiEngine.loadingDialogMsg]
+     */
+    open fun loadingDialogMsg(dialog: Dialog, msg: String) = uiEngine.loadingDialogMsg(dialog, msg)
+
 }

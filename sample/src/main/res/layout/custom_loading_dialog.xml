@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="98pt"
+    android:alpha="0.8"
+    android:background="@drawable/custom_dialog_bg"
+    android:gravity="center"
+    android:minWidth="98pt"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_loading"
+        android:layout_width="38pt"
+        android:layout_height="38pt"
+        android:layout_marginTop="10pt"
+        android:background="@drawable/base_engine_default_ic_loading" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8pt"
+        android:layout_marginTop="8pt"
+        android:maxLines="1"
+        android:textColor="@android:color/white"
+        android:textSize="12pt"
+        tools:text="正在加载..." />
+</LinearLayout>

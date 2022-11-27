@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="base_engine_str_back">后退</string>
+    <string name="base_engine_str_loading">正在加载…</string>
+</resources>

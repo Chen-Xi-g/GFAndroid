@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="44pt"
+        android:background="@android:color/white">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/base_engine_back"
+            android:layout_width="44pt"
+            android:layout_height="44pt"
+            android:background="@null"
+            android:contentDescription="@string/base_engine_str_back"
+            android:scaleType="centerInside"
+            android:src="@drawable/base_engine_ic_active_back" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/base_engine_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="16pt"
+            android:textStyle="bold"
+            tools:text="标题名称" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/base_engine_right_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="15pt"
+                android:textColor="@android:color/black"
+                android:textSize="14pt"
+                android:visibility="gone"
+                tools:text="添加" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/base_engine_right_image"
+                android:layout_width="44pt"
+                android:layout_height="44pt"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@android:drawable/ic_menu_add"
+                android:visibility="gone" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
+</layout>

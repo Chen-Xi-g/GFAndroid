@@ -8,7 +8,6 @@ dependencies {
     api Dependencies.viewModel
     // LiveData
     api Dependencies.liveData
-    // 引入状态栏设置
-    api Dependencies.immersionBar
-    api Dependencies.immersionBarKt
+    // 引入通用工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
+    api Dependencies.utilCode
 }
