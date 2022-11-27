@@ -14,6 +14,9 @@
 * [图片加载](#图片加载)
 * [RecyclerView](RecyclerView)
 * [图片选择器](#图片选择器)
+* [运行时权限](#运行时权限)
+* [Dialog](#Dialog)
+* [PopupWindow](PopupWindow)
 
 ## base_core
 
@@ -46,3 +49,15 @@
 ## 视频播放
 
 [DKVideoPlayer](https://github.com/Doikki/DKVideoPlayer)自由度高，封装MediaPlayer、ExoPlayer、IjkPlayer。模仿抖音并实现预加载，列表播放，悬浮播放，广告播放，弹幕，视频水印，视频滤镜。
+
+## 运行时权限
+
+[PermissionsDispatcher](https://github.com/permissions-dispatcher/PermissionsDispatcher)通过注解申请运行时权限，支持Kapt、申请权限时的不同状态回调。
+
+## Dialog
+
+适用于Kotlin的Material风格Dialog，对Kotlin特性支持友好，可选择性引入输入、文件选择、颜色、时间、日期、底部Dialog，耦合度低。
+
+## PopupWindow
+
+[BasePopup](https://github.com/razerdp/BasePopup)拥有非常高的自由度与丰富的API，使用稳定不会出现意料之外的错误。
