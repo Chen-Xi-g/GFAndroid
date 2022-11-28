@@ -28,9 +28,7 @@
 
 支持`Activity/Fragment`全局UI配置、局部UI配置。
 
-[![base_core](https://jitpack.io/v/Chen-Xi-g/GFAndroid.svg)](https://jitpack.io/#Chen-Xi-g/GFAndroid)
-
-[使用文档](https://chen-xi-g.github.io/)
+[![base_core](https://jitpack.io/v/Chen-Xi-g/GFAndroid.svg)](https://jitpack.io/#Chen-Xi-g/GFAndroid)    [使用文档](https://chen-xi-g.github.io/)
 
 1. 添加Jetpack到build文件中。
 ```groovy
