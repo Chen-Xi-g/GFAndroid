@@ -74,7 +74,7 @@ dependencies {
 
 ## Dialog
 
-适用于Kotlin的Material风格Dialog，对Kotlin特性支持友好，可选择性引入输入、文件选择、颜色、时间、日期、底部Dialog，耦合度低。
+[material-dialogs](https://github.com/afollestad/material-dialogs)适用于Kotlin的Material风格Dialog，对Kotlin特性支持友好，可选择性引入输入、文件选择、颜色、时间、日期、底部Dialog，耦合度低。
 
 ## PopupWindow
 
