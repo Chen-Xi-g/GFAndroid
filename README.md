@@ -58,7 +58,7 @@ dependencies {
 
 ## RecyclerView
 
-[liangjingkanj](https://github.com/liangjingkanji)的[BRV](https://github.com/liangjingkanji/BRV)，使用`OkHttp`+`协成`，支持**多布局**、**头尾布局**、**点击防抖**、**分组**、**悬停**等功能，对Kotlin的特性支持非常友好，而且解决`Issues`速度特别快。
+[liangjingkanj](https://github.com/liangjingkanji)的[BRV](https://github.com/liangjingkanji/BRV)，支持**多布局**、**头尾布局**、**点击防抖**、**分组**、**悬停**等功能，对Kotlin的特性支持非常友好，而且解决`Issues`速度特别快。
 
 ## 图片选择器
 
